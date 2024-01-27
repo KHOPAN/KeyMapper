@@ -30,5 +30,29 @@ void ParseJSON(BYTE* data) {
 			MessageBoxW(NULL, L"JSON root entries must be JSON object!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
 			return;
 		}
+
+		if(!keyboardEntry.HasMember("keyboard")) {
+			MessageBoxW(NULL, L"JSON entry is missing 'keyboard' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return;
+		}
+
+		rapidjson::Value& keyboardField = keyboardEntry["keyboard"];
+
+		if(!keyboardField.IsString()) {
+			MessageBoxW(NULL, L"JSON entry 'keyboard' must be string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return;
+		}
+
+		if(!keyboardEntry.HasMember("mapping")) {
+			MessageBoxW(NULL, L"JSON entry is missing 'mapping' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return;
+		}
+
+		rapidjson::Value& mappingField = keyboardEntry["mapping"];
+
+		if(!mappingField.IsArray()) {
+			MessageBoxW(NULL, L"JSON entry 'mapping' must be JSON array!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return;
+		}
 	}
 }
