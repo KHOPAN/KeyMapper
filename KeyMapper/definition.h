@@ -6,6 +6,7 @@
 extern "C" {
 #endif
 void DisplayError(DWORD, LPCWSTR);
+void ParseJSON(BYTE*);
 #ifdef __cplusplus
 }
 #endif
