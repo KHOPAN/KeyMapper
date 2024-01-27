@@ -24,16 +24,23 @@ BOOL ParseJSON(BYTE* data) {
 	rapidjson::SizeType arraySize = document.Size();
 	KeyMapStruct* structList = static_cast<KeyMapStruct*>(malloc(arraySize * sizeof(KeyMapStruct)));
 
+	if(!structList) {
+		DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+		return 1;
+	}
+
 	for(rapidjson::SizeType x = 0; x < arraySize; x++) {
 		rapidjson::Value& keyboardEntry = document[x];
 
 		if(!keyboardEntry.IsObject()) {
 			MessageBoxW(NULL, L"JSON root entries must be JSON object!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(structList);
 			return 1;
 		}
 
 		if(!keyboardEntry.HasMember("keyboard")) {
 			MessageBoxW(NULL, L"JSON entry is missing 'keyboard' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(structList);
 			return 1;
 		}
 
@@ -41,11 +48,13 @@ BOOL ParseJSON(BYTE* data) {
 
 		if(!keyboardField.IsString()) {
 			MessageBoxW(NULL, L"JSON entry 'keyboard' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(structList);
 			return 1;
 		}
 
 		if(!keyboardEntry.HasMember("mapping")) {
 			MessageBoxW(NULL, L"JSON entry is missing 'mapping' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(structList);
 			return 1;
 		}
 
@@ -53,22 +62,32 @@ BOOL ParseJSON(BYTE* data) {
 
 		if(!mappingField.IsArray()) {
 			MessageBoxW(NULL, L"JSON entry 'mapping' must be a JSON array!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(structList);
 			return 1;
 		}
 
 		rapidjson::SizeType mappingSize = mappingField.Size();
 		MappingData* mappingList = static_cast<MappingData*>(malloc(mappingSize * sizeof(MappingData)));
 
+		if(!mappingList) {
+			DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+			return 1;
+		}
+
 		for(rapidjson::SizeType y = 0; y < mappingSize; y++) {
 			rapidjson::Value& mappingEntry = mappingField[y];
 
 			if(!mappingEntry.IsObject()) {
 				MessageBoxW(NULL, L"'mapping' entries must be JSON object!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
 			if(!mappingEntry.HasMember("keyCode")) {
 				MessageBoxW(NULL, L"'mapping' entry is missing 'keyCode' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
@@ -76,11 +95,15 @@ BOOL ParseJSON(BYTE* data) {
 
 			if(!keyCodeField.IsNumber()) {
 				MessageBoxW(NULL, L"'mapping' entry 'keyCode' must be a number!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
 			if(!mappingEntry.HasMember("dll")) {
 				MessageBoxW(NULL, L"'mapping' entry is missing 'dll' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
@@ -88,11 +111,15 @@ BOOL ParseJSON(BYTE* data) {
 
 			if(!dllField.IsString()) {
 				MessageBoxW(NULL, L"'mapping' entry 'dll' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
 			if(!mappingEntry.HasMember("function")) {
 				MessageBoxW(NULL, L"'mapping' entry is missing 'function' field!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
@@ -100,6 +127,8 @@ BOOL ParseJSON(BYTE* data) {
 
 			if(!functionField.IsString()) {
 				MessageBoxW(NULL, L"'mapping' entry 'function' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
@@ -107,6 +136,8 @@ BOOL ParseJSON(BYTE* data) {
 
 			if(!library) {
 				MessageBoxW(NULL, L"Unable to load DLL library!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
@@ -114,6 +145,8 @@ BOOL ParseJSON(BYTE* data) {
 		
 			if(!function) {
 				MessageBoxW(NULL, L"Unable to load DLL function!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				free(mappingList);
+				free(structList);
 				return 1;
 			}
 
