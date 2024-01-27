@@ -1,6 +1,8 @@
 #include "definition.h"
 
 #define CLASS_NAME L"KeyGetterClass"
+#define HID_USAGE_PAGE_GENERIC ((USHORT) 0x01)
+#define HID_USAGE_GENERIC_KEYBOARD ((USHORT) 0x06)
 
 int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstance, _In_ LPSTR argument, _In_ int command) {
 	WNDCLASSEXW windowClass = {0};
@@ -17,7 +19,13 @@ int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstance,
 		return 1;
 	}
 
-	CreateWindowExW(0L, CLASS_NAME, L"KeyGetter", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, NULL, NULL, instance, NULL);
+	HWND window = CreateWindowExW(0L, CLASS_NAME, L"KeyGetter", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, 400, 400, NULL, NULL, instance, NULL);
+	RAWINPUTDEVICE devices[1];
+	devices[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
+	devices[0].usUsage = HID_USAGE_GENERIC_KEYBOARD;
+	devices[0].dwFlags = RIDEV_INPUTSINK;
+	devices[0].hwndTarget = window;
+	RegisterRawInputDevices(devices, 1, sizeof(devices[0]));
 	MSG message = {0};
 
 	while(GetMessageW(&message, NULL, 0, 0)) {
