@@ -20,4 +20,15 @@ void ParseJSON(BYTE* data) {
 		MessageBoxW(NULL, L"JSON root must be JSON array!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
 		return;
 	}
+
+	rapidjson::SizeType arraySize = document.Size();
+
+	for(rapidjson::SizeType i = 0; i < arraySize; i++) {
+		rapidjson::Value& keyboardEntry = document[i];
+
+		if(!keyboardEntry.IsObject()) {
+			MessageBoxW(NULL, L"JSON root entries must be JSON object!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return;
+		}
+	}
 }
