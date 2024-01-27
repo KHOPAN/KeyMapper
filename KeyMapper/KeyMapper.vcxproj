@@ -134,6 +134,7 @@
     <ClCompile Include="error.c" />
     <ClCompile Include="json.cpp" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="mapper.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definition.h" />

@@ -4,6 +4,18 @@
 
 #define KEYMAPPER_ERROR MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_SYSTEMMODAL
 
+typedef void (*VoidFunction) (void);
+
+typedef struct {
+	unsigned int keyCode;
+	VoidFunction function;
+} MappingData;
+
+typedef struct {
+	WCHAR* keyboardHuid;
+	MappingData* mappings;
+} KeyMapStruct;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
