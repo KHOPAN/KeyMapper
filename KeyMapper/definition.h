@@ -7,7 +7,7 @@
 typedef void (*VoidFunction) (void);
 
 typedef struct {
-	unsigned int keyCode;
+	USHORT keyCode;
 	VoidFunction function;
 } MappingData;
 
