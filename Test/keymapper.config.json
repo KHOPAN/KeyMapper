@@ -6,6 +6,11 @@
 				"keyCode": 8,
 				"dll": "simple.dll",
 				"function": "SimpleFunction"
+			},
+			{
+				"keyCode": 16,
+				"dll": "simple.dll",
+				"function": "EvenMoreSimpleFunction"
 			}
 		]
 	}
