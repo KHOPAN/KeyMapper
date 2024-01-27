@@ -4,8 +4,8 @@
 		"mapping": [
 			{
 				"keyCode": 8,
-				"dll": "shutdown.dll",
-				"function": "ShutdownSystem"
+				"dll": "simple.dll",
+				"function": "SimpleFunction"
 			}
 		]
 	}
