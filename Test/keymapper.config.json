@@ -1,0 +1,12 @@
+[
+	{
+		"keyboard": "--KEYBOARD-HID--",
+		"mapping": [
+			{
+				"keyCode": 8,
+				"dll": "shutdown.dll",
+				"function": "ShutdownSystem"
+			}
+		]
+	}
+]
