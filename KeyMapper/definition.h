@@ -12,15 +12,23 @@ typedef struct {
 } MappingData;
 
 typedef struct {
-	WCHAR* keyboardHuid;
+	CHAR* keyboardHuid;
 	MappingData* mappings;
+	size_t mappingSize;
 } KeyMapStruct;
+
+typedef struct {
+	KeyMapStruct* keyMapStruct;
+	size_t keyMapSize;
+} KeyMappings;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 void DisplayError(DWORD, LPCWSTR);
-void ParseJSON(BYTE*);
+BOOL ParseJSON(BYTE*);
+void SetMappingData(KeyMappings);
+void FreeMappingData();
 #ifdef __cplusplus
 }
 #endif

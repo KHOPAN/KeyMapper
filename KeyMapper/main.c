@@ -42,6 +42,11 @@ int main(int argc, char** argv) {
 
 	CloseHandle(configFile);
 	buffer[(DWORD) fileSize.QuadPart] = 0;
-	ParseJSON(buffer);
+
+	if(ParseJSON(buffer)) {
+		return -1;
+	}
+
+	FreeMappingData();
 	return 0;
 }
