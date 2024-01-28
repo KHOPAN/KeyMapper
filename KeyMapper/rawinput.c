@@ -13,6 +13,12 @@ void ProcessRawInput(RAWINPUT* rawInput) {
 	}
 
 	GetRawInputDeviceInfoW(deviceHandle, RIDI_DEVICENAME, deviceName, &size);
-	printf("Name: %ws\n", deviceName);
+	//printf("Name: %ws\n", deviceName);
 	free(deviceName);
+	KeyMappings mappings = GetMappingData();
+
+	for(size_t x = 0; x < mappings.keyMapSize; x++) {
+		KeyMapStruct keyMapping = mappings.keyMapStruct[x];
+		printf("Keyboard: %s\n", keyMapping.keyboardHuid);
+	}
 }

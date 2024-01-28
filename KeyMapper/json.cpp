@@ -154,7 +154,21 @@ BOOL ParseJSON(BYTE* data) {
 			mappingList[y].function = function;
 		}
 
-		structList[x].keyboardHuid = const_cast<CHAR*>(keyboardField.GetString());
+		CHAR* keyboardName = const_cast<CHAR*>(keyboardField.GetString());
+		size_t length = strlen(keyboardName);
+		CHAR* keyboardBuffer = static_cast<CHAR*>(malloc(sizeof(CHAR) * (length + 1)));
+
+		if(keyboardBuffer == NULL) {
+			DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+			return 1;
+		}
+
+		for(int i = 0; i < length; i++) {
+			keyboardBuffer[i] = keyboardName[i];
+		}
+
+		keyboardBuffer[length] = '\u0000';
+		structList[x].keyboardHuid = keyboardBuffer;
 		structList[x].mappings = mappingList;
 		structList[x].mappingSize = static_cast<size_t>(mappingSize);
 	}

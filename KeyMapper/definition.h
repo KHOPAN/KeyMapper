@@ -28,6 +28,7 @@ extern "C" {
 void DisplayError(DWORD, LPCWSTR);
 BOOL ParseJSON(BYTE*);
 void SetMappingData(KeyMappings);
+KeyMappings GetMappingData();
 void FreeMappingData();
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 void ProcessRawInput(RAWINPUT*);
