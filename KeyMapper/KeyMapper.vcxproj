@@ -136,6 +136,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="mapper.c" />
     <ClCompile Include="procedure.c" />
+    <ClCompile Include="rawinput.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definition.h" />

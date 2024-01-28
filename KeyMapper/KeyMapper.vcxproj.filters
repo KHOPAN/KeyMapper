@@ -30,6 +30,9 @@
     <ClCompile Include="procedure.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="rawinput.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definition.h">
