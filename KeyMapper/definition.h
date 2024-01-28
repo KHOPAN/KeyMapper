@@ -29,6 +29,7 @@ void DisplayError(DWORD, LPCWSTR);
 BOOL ParseJSON(BYTE*);
 void SetMappingData(KeyMappings);
 void FreeMappingData();
+LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 #ifdef __cplusplus
 }
 #endif
