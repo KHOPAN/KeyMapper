@@ -38,7 +38,7 @@ void ProcessKeyboard(KeyMapStruct keyMapping, RAWKEYBOARD keyboard) {
 		MappingData mapping = keyMapping.mappings[i];
 
 		if(mapping.keyCode == keyboard.VKey) {
-			printf("Match\n");
+			mapping.function();
 			break;
 		}
 	}
