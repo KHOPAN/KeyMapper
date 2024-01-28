@@ -11,7 +11,7 @@
 #endif
 
 int main(int argc, char** argv) {
-	HANDLE configFile = CreateFileW(L"D:\\GitHub Repository\\KeyMapper\\Test\\keymapper.config.json", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE configFile = CreateFileW(L"keymapper.config.json", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if(configFile == INVALID_HANDLE_VALUE) {
 		DWORD error = GetLastError();
