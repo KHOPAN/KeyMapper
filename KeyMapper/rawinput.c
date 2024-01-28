@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "definition.h"
 
+void ProcessKeyboard(KeyMapStruct, RAWKEYBOARD);
+
 void ProcessRawInput(RAWINPUT* rawInput) {
 	HANDLE deviceHandle = rawInput->header.hDevice;
 	UINT size = 0;
@@ -17,8 +19,23 @@ void ProcessRawInput(RAWINPUT* rawInput) {
 
 	for(size_t x = 0; x < mappings.keyMapSize; x++) {
 		KeyMapStruct keyMapping = mappings.keyMapStruct[x];
-		printf("Keyboard: %ws\n", keyMapping.keyboardHuid);
+
+		if(wcscmp(deviceName, keyMapping.keyboardHuid) == 0) {
+			ProcessKeyboard(keyMapping, rawInput->data.keyboard);
+			break;
+		}
 	}
 
 	free(deviceName);
+}
+
+void ProcessKeyboard(KeyMapStruct keyMapping, RAWKEYBOARD keyboard) {
+	for(int i = 0; i < keyMapping.mappingSize; i++) {
+		MappingData mapping = keyMapping.mappings[i];
+
+		if(mapping.keyCode == keyboard.VKey) {
+			printf("Match\n");
+			break;
+		}
+	}
 }
