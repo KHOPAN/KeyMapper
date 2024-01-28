@@ -156,7 +156,7 @@ BOOL ParseJSON(BYTE* data) {
 
 		CHAR* keyboardName = const_cast<CHAR*>(keyboardField.GetString());
 		size_t length = strlen(keyboardName);
-		CHAR* keyboardBuffer = static_cast<CHAR*>(malloc(sizeof(CHAR) * (length + 1)));
+		WCHAR* keyboardBuffer = static_cast<WCHAR*>(malloc(sizeof(WCHAR) * (length + 1)));
 
 		if(keyboardBuffer == NULL) {
 			DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");

@@ -12,7 +12,7 @@ typedef struct {
 } MappingData;
 
 typedef struct {
-	CHAR* keyboardHuid;
+	WCHAR* keyboardHuid;
 	MappingData* mappings;
 	size_t mappingSize;
 } KeyMapStruct;
