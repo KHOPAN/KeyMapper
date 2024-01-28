@@ -30,6 +30,10 @@ void ProcessRawInput(RAWINPUT* rawInput) {
 }
 
 void ProcessKeyboard(KeyMapStruct keyMapping, RAWKEYBOARD keyboard) {
+	if(keyboard.Flags != 0) {
+		return;
+	}
+
 	for(int i = 0; i < keyMapping.mappingSize; i++) {
 		MappingData mapping = keyMapping.mappings[i];
 
