@@ -1,5 +1,6 @@
-#include <Windows.h>
+#include "definition.h"
 
-__declspec(dllexport) void __stdcall OpenYouTube() {
-	system("start chrome https://www.youtube.com");
+__declspec(dllexport) void __stdcall Shutdown() {
+	EnablePrivilege(SE_SHUTDOWN_NAME);
+	InitiateSystemShutdownW(NULL, NULL, 0, TRUE, FALSE);
 }
