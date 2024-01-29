@@ -132,7 +132,12 @@ BOOL ParseJSON(BYTE* data) {
 				return 1;
 			}
 
-			HMODULE library = LoadLibraryA(dllField.GetString());
+			const char* libraryPath = dllField.GetString();
+			HMODULE library = GetModuleHandleA(libraryPath);
+
+			if(!library) {
+				library = LoadLibraryA(libraryPath);
+			}
 
 			if(!library) {
 				MessageBoxW(NULL, L"Unable to load DLL library!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
