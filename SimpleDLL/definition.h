@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-#define EXPORT(x) __declspec(dllexport) void __stdcall x()
+#define EXPORT(x) __declspec(dllexport) void __stdcall x(BOOL state, int argc, char** argv)
 
 #ifdef __cplusplus
 extern "C" {
