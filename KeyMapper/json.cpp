@@ -180,5 +180,31 @@ BOOL ProcessKeyMapping(rapidjson::Value& mappingEntry, MappingData& mapping) {
 
 	mapping.keyCode = static_cast<USHORT>(keyCodeField.GetInt64());
 	mapping.function = function;
+
+	if(!mappingEntry.HasMember("trigger")) {
+		return 0;
+	}
+
+	rapidjson::Value& triggerField = mappingEntry["trigger"];
+
+	if(!triggerField.IsString()) {
+		MessageBoxW(NULL, L"Entry 'trigger' of field 'mapping' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+		return 1;
+	}
+
+	const CHAR* triggerRaw = triggerField.GetString();
+
+	if(triggerRaw == "press") {
+		mapping.trigger = TRIGGER_PRESS;
+	} else if(triggerRaw == "release") {
+		mapping.trigger = TRIGGER_RELEASE;
+	} else if(triggerRaw == "hold") {
+		mapping.trigger = TRIGGER_HOLD;
+	} else if(triggerRaw == "toggle") {
+		mapping.trigger = TRIGGER_TOGGLE;
+	} else {
+		mapping.trigger = TRIGGER_PRESS;
+	}
+
 	return 0;
 }
