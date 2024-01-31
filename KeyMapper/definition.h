@@ -8,8 +8,6 @@ typedef void (*LibraryFunction) (BOOL, int, char**);
 
 #define TRIGGER_PRESS 0
 #define TRIGGER_RELEASE 1
-#define TRIGGER_HOLD 2
-#define TRIGGER_TOGGLE 3
 
 typedef struct {
 	USHORT keyCode;

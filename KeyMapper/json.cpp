@@ -198,10 +198,6 @@ BOOL ProcessKeyMapping(rapidjson::Value& mappingEntry, MappingData& mapping) {
 		mapping.trigger = TRIGGER_PRESS;
 	} else if(strcmp(triggerRaw, "release") == 0) {
 		mapping.trigger = TRIGGER_RELEASE;
-	} else if(strcmp(triggerRaw, "hold") == 0) {
-		mapping.trigger = TRIGGER_HOLD;
-	} else if(strcmp(triggerRaw, "toggle") == 0) {
-		mapping.trigger = TRIGGER_TOGGLE;
 	} else {
 		mapping.trigger = TRIGGER_PRESS;
 	}

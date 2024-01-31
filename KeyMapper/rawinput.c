@@ -38,11 +38,6 @@ void ProcessKeyboard(KeyMapStruct keyMapping, RAWKEYBOARD keyboard) {
 				mapping.function(FALSE, 0, NULL);
 			} else if(mapping.trigger == TRIGGER_RELEASE && keyboard.Flags == 1) {
 				mapping.function(FALSE, 0, NULL);
-			} else if(mapping.trigger == TRIGGER_HOLD) {
-				mapping.function(!keyboard.Flags, 0, NULL);
-			} else if(mapping.trigger == TRIGGER_TOGGLE) {
-				mapping.state = !mapping.state;
-				mapping.function(mapping.state, 0, NULL);
 			}
 
 			break;
