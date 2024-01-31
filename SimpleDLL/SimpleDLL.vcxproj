@@ -132,7 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="EnablePrivilege.c" />
-    <ClCompile Include="main.c" />
+    <ClCompile Include="Shutdown.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definition.h" />
