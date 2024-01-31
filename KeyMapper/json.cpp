@@ -154,14 +154,27 @@ BOOL ProcessKeyMapping(rapidjson::Value& mappingEntry, MappingData& mapping) {
 	}
 
 	if(!library) {
-		MessageBoxW(NULL, L"Unable to load the DLL library!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+		CHAR* text = FormatHeap("Unable to load the DLL library: %s", libraryPath);
+
+		if(text != NULL) {
+			MessageBoxA(NULL, text, "KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(text);
+		}
+
 		return 1;
 	}
 
-	VoidFunction function = reinterpret_cast<VoidFunction>(GetProcAddress(library, functionField.GetString()));
+	const CHAR* functionName = functionField.GetString();
+	VoidFunction function = reinterpret_cast<VoidFunction>(GetProcAddress(library, functionName));
 
 	if(!function) {
-		MessageBoxW(NULL, L"Unable to load the DLL function!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+		CHAR* text = FormatHeap("Unable to load the DLL function: %s", functionName);
+
+		if(text != NULL) {
+			MessageBoxA(NULL, text, "KeyMapper JSON Error", KEYMAPPER_ERROR);
+			free(text);
+		}
+
 		return 1;
 	}
 

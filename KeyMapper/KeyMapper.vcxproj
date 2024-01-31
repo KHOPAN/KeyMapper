@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="error.c" />
+    <ClCompile Include="formatheap.c" />
     <ClCompile Include="json.cpp" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mapper.c" />
