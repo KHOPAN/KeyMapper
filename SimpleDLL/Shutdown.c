@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "definition.h"
 
 EXPORT(Shutdown) {
