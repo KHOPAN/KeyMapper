@@ -137,6 +137,7 @@
     <ClCompile Include="mapper.c" />
     <ClCompile Include="procedure.c" />
     <ClCompile Include="rawinput.c" />
+    <ClCompile Include="widenheap.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definition.h" />
