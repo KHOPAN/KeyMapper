@@ -165,7 +165,7 @@ BOOL ProcessKeyMapping(rapidjson::Value& mappingEntry, MappingData& mapping) {
 	}
 
 	const CHAR* functionName = functionField.GetString();
-	VoidFunction function = reinterpret_cast<VoidFunction>(GetProcAddress(library, functionName));
+	LibraryFunction function = reinterpret_cast<LibraryFunction>(GetProcAddress(library, functionName));
 
 	if(!function) {
 		CHAR* text = FormatHeap("Unable to load the DLL function: %s", functionName);
@@ -194,13 +194,13 @@ BOOL ProcessKeyMapping(rapidjson::Value& mappingEntry, MappingData& mapping) {
 
 	const CHAR* triggerRaw = triggerField.GetString();
 
-	if(triggerRaw == "press") {
+	if(strcmp(triggerRaw, "press") == 0) {
 		mapping.trigger = TRIGGER_PRESS;
-	} else if(triggerRaw == "release") {
+	} else if(strcmp(triggerRaw, "release") == 0) {
 		mapping.trigger = TRIGGER_RELEASE;
-	} else if(triggerRaw == "hold") {
+	} else if(strcmp(triggerRaw, "hold") == 0) {
 		mapping.trigger = TRIGGER_HOLD;
-	} else if(triggerRaw == "toggle") {
+	} else if(strcmp(triggerRaw, "toggle") == 0) {
 		mapping.trigger = TRIGGER_TOGGLE;
 	} else {
 		mapping.trigger = TRIGGER_PRESS;

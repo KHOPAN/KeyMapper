@@ -30,15 +30,21 @@ void ProcessRawInput(RAWINPUT* rawInput) {
 }
 
 void ProcessKeyboard(KeyMapStruct keyMapping, RAWKEYBOARD keyboard) {
-	if(keyboard.Flags != 0) {
-		return;
-	}
-
 	for(int i = 0; i < keyMapping.mappingSize; i++) {
 		MappingData mapping = keyMapping.mappings[i];
 
 		if(mapping.keyCode == keyboard.VKey) {
-			mapping.function();
+			if(mapping.trigger == TRIGGER_PRESS && keyboard.Flags == 0) {
+				mapping.function(FALSE, 0, NULL);
+			} else if(mapping.trigger == TRIGGER_RELEASE && keyboard.Flags == 1) {
+				mapping.function(FALSE, 0, NULL);
+			} else if(mapping.trigger == TRIGGER_HOLD) {
+				mapping.function(!keyboard.Flags, 0, NULL);
+			} else if(mapping.trigger == TRIGGER_TOGGLE) {
+				mapping.state = !mapping.state;
+				mapping.function(mapping.state, 0, NULL);
+			}
+
 			break;
 		}
 	}

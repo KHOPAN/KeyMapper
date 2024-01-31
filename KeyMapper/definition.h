@@ -4,7 +4,7 @@
 
 #define KEYMAPPER_ERROR MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_SYSTEMMODAL
 
-typedef void (*VoidFunction) (void);
+typedef void (*LibraryFunction) (BOOL, int, char**);
 
 #define TRIGGER_PRESS 0
 #define TRIGGER_RELEASE 1
@@ -13,8 +13,9 @@ typedef void (*VoidFunction) (void);
 
 typedef struct {
 	USHORT keyCode;
-	VoidFunction function;
+	LibraryFunction function;
 	int trigger;
+	BOOL state;
 } MappingData;
 
 typedef struct {
