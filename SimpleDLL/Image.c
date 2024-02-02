@@ -7,6 +7,10 @@ BOOL globalState;
 HINSTANCE globalInstance;
 volatile HWND globalWindow;
 HBITMAP globalBitmap;
+int globalX;
+int globalY;
+int globalWidth;
+int globalHeight;
 
 LRESULT CALLBACK WindowProcedure(HWND, UINT, WPARAM, LPARAM);
 void __cdecl ImageWindowThread(void);
@@ -17,7 +21,33 @@ EXPORT(Image) {
 		return;
 	}
 
-	globalBitmap = LoadImageW(globalInstance, argv[0], IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	HBITMAP bitmapHandle = LoadImageW(globalInstance, argv[0], IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+
+	if(!bitmapHandle) {
+		MessageBoxW(NULL, L"Invalid bitmap!", L"Error", MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_SYSTEMMODAL);
+		return;
+	}
+
+	globalBitmap = bitmapHandle;
+	int width = GetSystemMetrics(SM_CXSCREEN);
+	int height = GetSystemMetrics(SM_CYSCREEN);
+	BITMAP bitmap = {0};
+	GetObjectW(bitmapHandle, sizeof(bitmap), &bitmap);
+	int newWidth = (int) (((double) bitmap.bmWidth) / ((double) bitmap.bmHeight) * ((double) height));
+	int newHeight = (int) (((double) bitmap.bmHeight) / ((double) bitmap.bmWidth) * ((double) width));
+
+	if(newWidth < width) {
+		newHeight = height;
+		globalX = (int) ((((double) width) - ((double) newWidth)) * 0.5);
+		globalY = 0;
+	} else {
+		newWidth = width;
+		globalX = 0;
+		globalY = (int) ((((double) height) - ((double) newHeight)) * 0.5);
+	}
+
+	globalWidth = newWidth;
+	globalHeight = newHeight;
 	globalState = !globalState;
 	ShowWindow(globalWindow, globalState ? SW_MAXIMIZE : SW_HIDE);
 }
@@ -30,6 +60,7 @@ BOOL ImageInitialize(HINSTANCE instance) {
 
 BOOL ImageDestroy(HINSTANCE instance) {
 	DestroyWindow(globalWindow);
+	DeleteObject(globalBitmap);
 	UnregisterClassW(CLASS_NAME, instance);
 	return TRUE;
 }
@@ -76,7 +107,13 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wparam, LPARA
 		HBITMAP oldBitmap = SelectObject(memoryContext, globalBitmap);
 		BITMAP bitmap;
 		GetObjectW(globalBitmap, sizeof(bitmap), &bitmap);
-		BitBlt(context, 0, 0, bitmap.bmWidth, bitmap.bmHeight, memoryContext, 0, 0, SRCCOPY);
+		HBRUSH brush = GetStockObject(DC_BRUSH);
+		SetDCBrushColor(context, 0xFF000000);
+		RECT rect;
+		GetClientRect(window, &rect);
+		FillRect(context, &rect, brush);
+		SetStretchBltMode(context, HALFTONE);
+		StretchBlt(context, globalX, globalY, globalWidth, globalHeight, memoryContext, 0, 0, bitmap.bmWidth, bitmap.bmHeight, SRCCOPY);
 		SelectObject(memoryContext, oldBitmap);
 		DeleteDC(memoryContext);
 		EndPaint(window, &paintStruct);
