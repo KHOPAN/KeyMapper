@@ -20,9 +20,12 @@ void ProcessRawInput(RAWINPUT* rawInput) {
 	for(size_t x = 0; x < mappings.keyMapSize; x++) {
 		KeyMapStruct keyMapping = mappings.keyMapStruct[x];
 
-		if(wcscmp(deviceName, keyMapping.keyboardHuid) == 0) {
-			ProcessKeyboard(keyMapping, rawInput->data.keyboard);
-			break;
+		for(size_t y = 0; y < keyMapping.keyboardSize; y++) {
+			if(wcscmp(deviceName, keyMapping.keyboardHuid[y]) == 0) {
+				ProcessKeyboard(keyMapping, rawInput->data.keyboard);
+				free(deviceName);
+				return;
+			}
 		}
 	}
 

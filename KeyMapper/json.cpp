@@ -58,8 +58,8 @@ BOOL ProcessRootEntry(rapidjson::Value& keyboardEntry, KeyMapStruct& keyMapStruc
 
 	rapidjson::Value& keyboardField = keyboardEntry["keyboard"];
 
-	if(!keyboardField.IsString()) {
-		MessageBoxW(NULL, L"Field 'keyboard' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+	if(!keyboardField.IsString() && !keyboardField.IsArray()) {
+		MessageBoxW(NULL, L"Field 'keyboard' must be a string or an array of strings!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
 		return 1;
 	}
 
@@ -90,15 +90,57 @@ BOOL ProcessRootEntry(rapidjson::Value& keyboardEntry, KeyMapStruct& keyMapStruc
 		}
 	}
 
-	CHAR* keyboardName = const_cast<CHAR*>(keyboardField.GetString());
-	WCHAR* wideKeyboardName = WidenHeap(keyboardName);
+	if(keyboardField.IsString()) {
+		CHAR* keyboardName = const_cast<CHAR*>(keyboardField.GetString());
+		WCHAR* wideKeyboardName = WidenHeap(keyboardName);
 
-	if(wideKeyboardName == NULL) {
-		DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
-		return 1;
+		if(wideKeyboardName == NULL) {
+			DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+			return 1;
+		}
+
+		WCHAR** memory = (WCHAR**) malloc(sizeof(WCHAR*));
+
+		if(memory == NULL) {
+			DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+			return 1;
+		}
+
+		memory[0] = wideKeyboardName;
+		keyMapStruct.keyboardHuid = memory;
+		keyMapStruct.keyboardSize = 1;
+	} else {
+		rapidjson::SizeType keyboardSize = keyboardField.Size();
+		WCHAR** memory = (WCHAR**) malloc(sizeof(WCHAR*) * keyboardSize);
+
+		if(memory == NULL) {
+			DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+			return 1;
+		}
+
+		for(rapidjson::SizeType i = 0; i < keyboardSize; i++) {
+			rapidjson::Value& keyboardEntry = keyboardField[i];
+
+			if(!keyboardEntry.IsString()) {
+				MessageBoxW(NULL, L"Array 'keyboard' entries must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+				return 1;
+			}
+
+			CHAR* keyboardName = const_cast<CHAR*>(keyboardEntry.GetString());
+			WCHAR* wideKeyboardName = WidenHeap(keyboardName);
+
+			if(wideKeyboardName == NULL) {
+				DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+				return 1;
+			}
+
+			memory[i] = wideKeyboardName;
+		}
+
+		keyMapStruct.keyboardHuid = memory;
+		keyMapStruct.keyboardSize = keyboardSize;
 	}
 
-	keyMapStruct.keyboardHuid = wideKeyboardName;
 	keyMapStruct.mappings = mappingList;
 	keyMapStruct.mappingSize = static_cast<size_t>(mappingSize);
 	return 0;

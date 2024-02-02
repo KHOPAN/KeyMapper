@@ -17,7 +17,8 @@ typedef struct {
 } MappingData;
 
 typedef struct {
-	WCHAR* keyboardHuid;
+	WCHAR** keyboardHuid;
+	size_t keyboardSize;
 	MappingData* mappings;
 	size_t mappingSize;
 } KeyMapStruct;
