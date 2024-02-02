@@ -223,25 +223,83 @@ BOOL ProcessKeyMapping(rapidjson::Value& mappingEntry, MappingData& mapping) {
 	mapping.keyCode = static_cast<USHORT>(keyCodeField.GetInt64());
 	mapping.function = function;
 
-	if(!mappingEntry.HasMember("trigger")) {
-		return 0;
+	if(mappingEntry.HasMember("trigger")) {
+		rapidjson::Value& triggerField = mappingEntry["trigger"];
+
+		if(!triggerField.IsString()) {
+			MessageBoxW(NULL, L"Entry 'trigger' of field 'mapping' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return 1;
+		}
+
+		const CHAR* triggerRaw = triggerField.GetString();
+
+		if(strcmp(triggerRaw, "press") == 0) {
+			mapping.trigger = TRIGGER_PRESS;
+		} else if(strcmp(triggerRaw, "release") == 0) {
+			mapping.trigger = TRIGGER_RELEASE;
+		} else {
+			mapping.trigger = TRIGGER_PRESS;
+		}
 	}
 
-	rapidjson::Value& triggerField = mappingEntry["trigger"];
+	if(mappingEntry.HasMember("arguments")) {
+		rapidjson::Value& argumentsField = mappingEntry["arguments"];
 
-	if(!triggerField.IsString()) {
-		MessageBoxW(NULL, L"Entry 'trigger' of field 'mapping' must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
-		return 1;
-	}
+		if(!argumentsField.IsString() && !argumentsField.IsArray()) {
+			MessageBoxW(NULL, L"Field 'arguments' must be a string or an array of strings!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+			return 1;
+		}
 
-	const CHAR* triggerRaw = triggerField.GetString();
+		if(argumentsField.IsString()) {
+			CHAR* singleArgument = const_cast<CHAR*>(argumentsField.GetString());
+			WCHAR* wideArgument = WidenHeap(singleArgument);
 
-	if(strcmp(triggerRaw, "press") == 0) {
-		mapping.trigger = TRIGGER_PRESS;
-	} else if(strcmp(triggerRaw, "release") == 0) {
-		mapping.trigger = TRIGGER_RELEASE;
-	} else {
-		mapping.trigger = TRIGGER_PRESS;
+			if(wideArgument == NULL) {
+				DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+				return 1;
+			}
+
+			WCHAR** memory = (WCHAR**) malloc(sizeof(WCHAR*));
+
+			if(memory == NULL) {
+				DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+				return 1;
+			}
+
+			memory[0] = wideArgument;
+			mapping.arguments = memory;
+			mapping.argumentSize = 1;
+		} else {
+			rapidjson::SizeType argumentSize = argumentsField.Size();
+			WCHAR** memory = (WCHAR**) malloc(sizeof(WCHAR*) * argumentSize);
+
+			if(memory == NULL) {
+				DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+				return 1;
+			}
+
+			for(rapidjson::SizeType i = 0; i < argumentSize; i++) {
+				rapidjson::Value& argumentEntry = argumentsField[i];
+
+				if(!argumentEntry.IsString()) {
+					MessageBoxW(NULL, L"Array 'arguments' entries must be a string!", L"KeyMapper JSON Error", KEYMAPPER_ERROR);
+					return 1;
+				}
+
+				CHAR* singleArgument = const_cast<CHAR*>(argumentEntry.GetString());
+				WCHAR* wideArgument = WidenHeap(singleArgument);
+
+				if(wideArgument == NULL) {
+					DisplayError(ERROR_NOT_ENOUGH_MEMORY, L"malloc()");
+					return 1;
+				}
+
+				memory[i] = wideArgument;
+			}
+
+			mapping.arguments = memory;
+			mapping.argumentSize = argumentSize;
+		}
 	}
 
 	return 0;

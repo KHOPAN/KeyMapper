@@ -4,7 +4,7 @@
 
 #define KEYMAPPER_ERROR MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_SYSTEMMODAL
 
-typedef void (*LibraryFunction) (BOOL, int, char**);
+typedef void (*LibraryFunction) (BOOL, int, wchar_t**);
 
 #define TRIGGER_PRESS 0
 #define TRIGGER_RELEASE 1
@@ -14,6 +14,8 @@ typedef struct {
 	LibraryFunction function;
 	int trigger;
 	BOOL state;
+	WCHAR** arguments;
+	size_t argumentSize;
 } MappingData;
 
 typedef struct {

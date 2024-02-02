@@ -38,9 +38,9 @@ void ProcessKeyboard(KeyMapStruct keyMapping, RAWKEYBOARD keyboard) {
 
 		if(mapping.keyCode == keyboard.VKey) {
 			if(mapping.trigger == TRIGGER_PRESS && keyboard.Flags == 0) {
-				mapping.function(FALSE, 0, NULL);
+				mapping.function(FALSE, (int) mapping.argumentSize, mapping.arguments);
 			} else if(mapping.trigger == TRIGGER_RELEASE && keyboard.Flags == 1) {
-				mapping.function(FALSE, 0, NULL);
+				mapping.function(FALSE, (int) mapping.argumentSize, mapping.arguments);
 			}
 
 			break;
