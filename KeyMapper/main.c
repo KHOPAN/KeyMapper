@@ -10,7 +10,7 @@
 #define HID_USAGE_GENERIC_KEYBOARD ((USHORT) 0x06)
 #endif
 
-int main(int argc, char** argv) {
+int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previousInstance, _In_ LPSTR argument, _In_ int command) {
 	HANDLE configFile = CreateFileW(L"keymapper.config.json", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if(configFile == INVALID_HANDLE_VALUE) {
@@ -55,7 +55,6 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	HINSTANCE instance = GetModuleHandleW(NULL);
 	WNDCLASSW windowClass = {0};
 	windowClass.hInstance = instance;
 	windowClass.lpszClassName = L"KeyMapper";
